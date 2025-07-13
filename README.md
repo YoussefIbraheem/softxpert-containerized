@@ -82,8 +82,8 @@ This project uses [Laravel Sail](https://laravel.com/docs/sail) as a lightweight
 git clone https://github.com/YoussefIbraheem/softxpert-containerized.git
 cd softxpert-containerized
 cp .env.example .env
-./vendor/bin/sail up -d
 ./vendor/bin/sail composer install
+./vendor/bin/sail up -d
 ./vendor/bin/sail artisan key:generate
 ````
 
