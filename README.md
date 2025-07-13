@@ -1,285 +1,237 @@
-# 🧩 SoftXpert Task Management API
+# 🐳 SoftXpert Task Management API (Dockerized)
 
-A robust RESTful backend API for task management built with **Laravel** and tested using **PestPHP**. It supports role-based access control (Admin, Manager, User), task dependencies, status control workflows, and dynamic permission logic.
+A robust RESTful backend API for task management built with **Laravel**, tested using **PestPHP**, and containerized using **Laravel Sail (Docker)**. It supports role-based access control (Admin, Manager, User), task dependencies, status workflows, and a clean developer experience.
 
 ---
 
 ## 📄 Table of Contents
 
-- [📚 Features](#-features)
-- [📊 ER Diagram](#-er-diagram)
-- [📂 Folder Structure](#-folder-structure)
-- [🛠️ Technologies Used](#️-technologies-used)
-- [⚙️ Installation & Setup](#️-installation--setup)
-- [✅ Testing](#-testing)
-- [📮 Postman Documentation](#-postman-documentation)
-- [📘 API Documentation (Scribe)](#-api-documentation-scribe)
-- [🚦 API Summary](#-api-summary)
-- [👨‍👩‍👧‍👦 Roles & Permissions](#-roles--permissions)
-- [🧪 Test Coverage](#-test-coverage)
-- [📦 Packages Installed](#-packages-installed-excluding-laravels-preinstalled)
+- [🐳 SoftXpert Task Management API (Dockerized)](#-softxpert-task-management-api-dockerized)
+  - [📄 Table of Contents](#-table-of-contents)
+  - [📚 Features](#-features)
+  - [📊 ER Diagram](#-er-diagram)
+  - [📦 API Test Collection (Postman)](#-api-test-collection-postman)
+  - [🧪 Testing Environment](#-testing-environment)
+  - [🚀 Docker Setup](#-docker-setup)
+    - [⚙️ Setup via Laravel Sail](#️-setup-via-laravel-sail)
+      - [📦 1. Clone \& Install](#-1-clone--install)
+    - [🌱 Migrate \& Seed Database](#-migrate--seed-database)
+    - [✅ Running Tests in Docker](#-running-tests-in-docker)
+  - [📄 API Documentation](#-api-documentation)
+  - [📮 API Summary](#-api-summary)
+  - [👨‍👩‍👧‍👦 Roles \& Permissions](#-roles--permissions)
+  - [🧪 Test Coverage](#-test-coverage)
+  - [📦 Installed Packages](#-installed-packages)
+    - [🔐 Auth \& Roles](#-auth--roles)
+    - [📄 API Docs](#-api-docs)
+    - [🧪 Testing \& QA](#-testing--qa)
+  - [🗺️ ERD (Entity Relationship Diagram)](#️-erd-entity-relationship-diagram)
 
 ---
 
 ## 📚 Features
 
-* 🔐 Auth (Register, Login, Logout)
-* 👤 User profile management
-* 🔁 Role Switching (Admin ↔ Manager)
-* 📋 Task CRUD with:
-  * Assignees
-  * Status lifecycle
-  * Task dependencies (children)
-* 🔄 Change task status with validation on role and dependency
-* 👁️ Task visibility based on role & assignment
-* 🧩 Add task dependencies (children) via dedicated endpoint
-* 🧪 100% feature coverage in PestPHP
+- 🔐 Auth (Register, Login, Logout)
+- 🔁 Role Switching (Admin ↔ Manager)
+- 🧑‍💼 Task creation with assignees
+- ⛓️ Task dependencies (parent-child logic)
+- 🔄 Status change workflow with role & dependency validation
+- 🔍 Role-based visibility
+- 📄 API Docs via Scribe (`/docs`)
+- 🧪 Full test coverage (using PestPHP)
+- 🐳 Dockerized with Laravel Sail
 
 ---
 
 ## 📊 ER Diagram
 
-The system consists of users, tasks, and a pivot table for both task dependencies and assignees.
+📁 `ERD.drawio` — visual schema of `users`, `tasks`, and pivot tables for task assignment & dependencies.
 
-📄 **File:** [`ERD.drawio`](ERD.drawio) — Open it with [draw.io](https://app.diagrams.net).
-
----
-
-## 📂 Folder Structure
-
-```
-app/
-├── Http/
-│   ├── Controllers/
-│   ├── Requests/
-│   └── Resources/
-├── Models/
-├── Policies/
-├── Enums/
-tests/
-├── Feature/
-│   ├── AuthTest.php
-│   ├── UserTest.php
-│   ├── ChangeTaskStatusTest.php
-│   └── ...
-```
+> You can open it using [draw.io](https://app.diagrams.net)
 
 ---
 
-## 🛠️ Technologies Used
+## 📦 API Test Collection (Postman)
 
-* **Laravel 12.20.0**
-* **PHP 8.2+**
-* **Sanctum** for token-based auth
-* **Spatie Laravel-Permission** for RBAC
-* **PestPHP** for testing
-* **Scribe** for API documentation
-* **Postman** for API collection
-* **Draw.io** for ER Diagram
+📄 File: `SoftXpert.postman_collection.json`
+
+> Import into Postman to explore all endpoints.
 
 ---
 
-## ⚙️ Installation & Setup
+## 🧪 Testing Environment
 
-### 📦 Clone & Install Dependencies
+- In-memory SQLite (`:memory:`) used for isolated testing.
+- `.env.testing` config provided.
+- Tests written using **PestPHP**.
+- Parallel testing enabled with `brianium/paratest`.
+
+---
+
+## 🚀 Docker Setup
+
+This project uses [Laravel Sail](https://laravel.com/docs/sail) as a lightweight Docker environment.
+
+---
+
+### ⚙️ Setup via Laravel Sail
+
+#### 📦 1. Clone & Install
 
 ```bash
-https://github.com/YoussefIbraheem/softxpert-app.git
-cd softxpert-app
-composer install
-```
-
-### 🔑 Environment Configuration
-
-```bash
+git clone https://github.com/YoussefIbraheem/softxpert-containerized.git
+cd softxpert-containerized
 cp .env.example .env
-php artisan key:generate
-```
+./vendor/bin/sail up -d
+./vendor/bin/sail composer install
+./vendor/bin/sail artisan key:generate
+````
 
-> ✅ Update `.env` with your DB credentials.
-
-### 🧪 Testing Environment
-
-```bash
-cp .env.testing.example .env.testing
-```
-
-> Uses `sqlite` in-memory for fast, isolated test runs.
+> You can alias Sail for convenience:
+>
+> ```bash
+> alias sail="./vendor/bin/sail"
+> ```
 
 ---
 
-### 🗃️ Migrate & Seed Database
+### 🌱 Migrate & Seed Database
 
 ```bash
-php artisan migrate --seed
+sail artisan migrate --seed
 ```
 
-To reset:
+Reset with:
 
 ```bash
-php artisan migrate:fresh --seed
-```
-
----
-
-## ✅ Testing
-
-```bash
-php artisan test
-# or
-vendor/bin/pest
-```
-
-Run with coverage:
-
-```bash
-vendor/bin/pest --coverage
+sail artisan migrate:fresh --seed
 ```
 
 ---
 
-## 📮 Postman Documentation
+### ✅ Running Tests in Docker
 
-🧪 Postman collection: [`SoftXpert.postman_collection.json`](SoftXpert.postman_collection.json)
+Run all tests:
 
-You can import it into Postman to quickly test all API endpoints.
+```bash
+sail test
+```
 
-<details>
-<summary>Endpoints Overview</summary>
+Or with Pest:
 
-**Auth**
-- POST `/register`
-- POST `/login`
-- POST `/logout`
+```bash
+sail pest
+```
 
-**User**
-- GET `/user`
-- POST `/user/update`
-- POST `/change-role`
-- GET `/users`
-- GET `/users/{id}`
+With coverage report:
 
-**Tasks**
-- GET `/tasks`
-- GET `/tasks/{id}`
-- POST `/tasks/create`
-- POST `/tasks/{id}/update`
-- POST `/tasks/{id}/change-status`
-- POST `/tasks/{id}/add-dependents`
+```bash
+sail pest --coverage
+```
 
-</details>
+> Ensure `.env.testing` and `phpunit.xml` are correctly configured for SQLite.
 
 ---
 
-## 📘 API Documentation (Scribe)
+## 📄 API Documentation
 
-The full API documentation is generated using **Scribe** and is viewable in-browser.
+📁 Generated using [**Scribe**](https://scribe.knuckles.wtf)
 
-### 📍 URL
+📂 Location: `/docs`
+
+To regenerate:
 
 ```bash
-http://localhost:8000/docs
+sail artisan scribe:generate
 ```
 
-### 📁 Files
+Then visit:
 
-- Documentation lives in: `public/docs/`
-- Configurable in: `config/scribe.php`
-
-### 🔁 Regenerate
-
-```bash
-php artisan scribe:generate
+```
+http://localhost/docs
 ```
 
 ---
 
-## 🚦 API Summary
+## 📮 API Summary
 
 | Action                    | Admin | Manager |       User      |
 | ------------------------- | :---: | :-----: | :-------------: |
 | Create task               |   ✅   |    ✅    |        ❌        |
 | Edit task (except status) |   ✅   |    ✅    |        ❌        |
 | Add dependents            |   ✅   |    ✅    |        ❌        |
-| Change status (normal)    |   ✅   |    ✅    | ✅ (if assigned) |
+| Change status             |   ✅   |    ✅    | ✅ (if assigned) |
 | Cancel task               |   ✅   |    ✅    |        ❌        |
-| View assigned tasks       |   ✅   |    ✅    |        ✅        |
 | Delete task               |   ✅   |    ❌    |        ❌        |
 | View all tasks            |   ✅   |    ✅    |        ❌        |
+| View own tasks            |   ✅   |    ✅    |        ✅        |
 
 ---
 
 ## 👨‍👩‍👧‍👦 Roles & Permissions
 
-- **Admin**
-  - Full access including delete, cancel, and role changes.
-- **Manager**
-  - Full task control, no deletion or role change.
-- **User**
-  - Can only update status of their assigned tasks (not cancel).
+* 🧑‍💼 **Admin**: Full control
+* 👨‍💼 **Manager**: Can create & manage tasks, cancel tasks, assign users
+* 👤 **User**: Can only change status of assigned tasks (except `cancelled`)
 
 ---
 
 ## 🧪 Test Coverage
 
-Fully covered using PestPHP:
+Thorough tests cover:
 
-* Auth & login/logout
-* Role checks
-* Task creation, update, filtering
-* Status rules
-* Dependency enforcement
-* User update
-* Policy enforcement
+* 🔐 Auth
+* 👥 Role management
+* 📋 Task CRUD & visibility
+* 🔄 Status transitions
+* ⛓️ Dependency logic
+* 🛡️ Policy restrictions
 
 ---
 
-## 📦 Packages Installed (excluding Laravel defaults)
-
-### ⚙️ Development
-
-- `pestphp/pest`
-- `brianium/paratest`
-- `larastan/larastan`
-- `phpstan/phpstan`
-- `filp/whoops`
+## 📦 Installed Packages
 
 ### 🔐 Auth & Roles
 
-- `laravel/sanctum`
-- `spatie/laravel-permission`
+| Package                     | Description                |
+| --------------------------- | -------------------------- |
+| `laravel/sanctum`           | Token-based authentication |
+| `spatie/laravel-permission` | Role-based access control  |
 
-### 📄 Docs & Utilities
+### 📄 API Docs
 
-- `knuckleswtf/scribe`
-- `fakerphp/faker`
-- `guzzlehttp/guzzle`
-- `fruitcake/php-cors`
+| Package              | Description                 |
+| -------------------- | --------------------------- |
+| `knuckleswtf/scribe` | Automatic API documentation |
+
+### 🧪 Testing & QA
+
+| Package             | Description                   |
+| ------------------- | ----------------------------- |
+| `pestphp/pest`      | Elegant PHP Testing framework |
+| `brianium/paratest` | Parallel test execution       |
+| `phpstan/phpstan`   | Static analysis               |
+| `larastan/larastan` | Laravel extension for PHPStan |
 
 ---
 
 ## 🗺️ ERD (Entity Relationship Diagram)
 
-📁 File: [`ERD.drawio`](ERD.drawio) (view in draw.io)
+📄 File: [`ERD.drawio`](ERD.drawio)
 
 <details>
 <summary>Overview</summary>
 
-- **Users**
-  - One-to-many: tasks (created)
-  - Many-to-many: assigned tasks
+* **Users**
 
-- **Tasks**
-  - Belongs to: owner (creator)
-  - Many-to-many: assignees (users)
-  - Self-referencing: depends_on, dependents
+  * Can create many tasks
+  * Can be assigned to many tasks
+* **Tasks**
+
+  * Belongs to one user (creator)
+  * Has many assignees
+  * Has many dependencies (self-join)
 
 </details>
 
 ---
-
-## 🎯 Final Notes
-
-✅ Ready for deployment or CI/CD integration.  
-✅ API tested and documented.  
-✅ Fully modular and extendable.
